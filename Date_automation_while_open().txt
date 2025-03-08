@@ -1,0 +1,15 @@
+
+Private Sub Workbook_Open()
+    Dim targetCell As Range
+    Dim formattedDate As String
+    
+    ' Change "Sheet1" to the name of your sheet
+    ' Change "A1" to the cell where you want the text and date to appear
+    Set targetCell = ThisWorkbook.Sheets("Detailed").Range("A1")
+    
+    ' Format the current date as "dd-mmm-yyyy" and convert month to uppercase
+    formattedDate = UCase(Format(Date, "dd-mmm-yyyy"))
+    
+    ' Append the formatted date to the existing text in the cell
+    targetCell.Value = "LOCAL MARKET (L0001) PURCHASE - " & formattedDate
+End Sub

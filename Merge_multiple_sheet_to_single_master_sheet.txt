@@ -1,0 +1,34 @@
+Sub Merge_Sheets()
+
+Dim startRow, startCol, lastRow, lastCol As Long
+Dim headers As Range
+
+'Set Master sheet for consolidation
+Set mtr = Worksheets("Master")
+
+Set wb = ThisWorkbook
+'Get Headers
+Set headers = Application.InputBox("Select the Headers", Type:=8)
+
+'Copy Headers into master
+headers.Copy mtr.Range("A1")
+startRow = headers.Row + 1
+startCol = headers.Column
+
+Debug.Print startRow, startCol
+'loop through all sheets
+For Each ws In wb.Worksheets
+     'except the master sheet from looping
+     If ws.Name <> "Master" Then
+        ws.Activate
+        lastRow = Cells(Rows.Count, startCol).End(xlUp).Row
+        lastCol = Cells(startRow, Columns.Count).End(xlToLeft).Column
+        'get data from each worksheet and copy it into Master sheet
+        Range(Cells(startRow, startCol), Cells(lastRow, lastCol)).Copy _
+        mtr.Range("A" & mtr.Cells(Rows.Count, 1).End(xlUp).Row + 1)
+           End If
+Next ws
+
+Worksheets("Master").Activate
+
+End Sub

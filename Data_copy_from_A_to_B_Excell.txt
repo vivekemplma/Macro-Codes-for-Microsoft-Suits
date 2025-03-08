@@ -1,0 +1,25 @@
+Sub CopyAndReplaceDataDaily()
+    Dim wsSource As Worksheet
+    Dim wsDest As Worksheet
+    Dim lastRow As Long
+    
+    ' Set references to the source and destination worksheets
+    Set wsSource = ThisWorkbook.Sheets("Sheet1")
+    Set wsDest = ThisWorkbook.Sheets("Sheet2")
+    
+    ' Clear existing data in destination sheet
+    wsDest.UsedRange.Clear
+    
+    ' Find the last used row in the source sheet
+    lastRow = wsSource.Cells(wsSource.Rows.Count, "A").End(xlUp).Row
+    
+    ' Copy data from source to destination
+    wsSource.Range("A1").EntireRow.Resize(lastRow, wsSource.UsedRange.Columns.Count).Copy _
+        Destination:=wsDest.Range("A1")
+    
+    ' Clear data from source sheet after copying
+    wsSource.UsedRange.ClearContents
+    
+    ' Notify user about the successful copying and clearing
+    MsgBox "Data replaced in Sheet2 with data from Sheet1 and Sheet1 cleared successfully.", vbInformation
+End Sub

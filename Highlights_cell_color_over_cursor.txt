@@ -1,0 +1,10 @@
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+ActiveCell.Calculate
+End Sub
+
+
+
+IN EXCEL WORKBOOK TO HIGHLIGHT CELLS WITH COLOR BY UP/DOWN ARROW PRESSING..
+
+
+=CELL("ROW")=ROW() APPLY THIS CODE IN CONDITIONAL FORMATTING..

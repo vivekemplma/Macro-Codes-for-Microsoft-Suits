@@ -1,0 +1,52 @@
+Sub SplitSheetIntoMultipleWorkbooksBasedOnColumn()
+    Dim objWorksheet As Excel.Worksheet
+    Dim nLastRow, nRow, nNextRow As Integer
+    Dim strColumnValue As String
+    Dim objDictionary As Object
+    Dim varColumnValues As Variant
+    Dim varColumnValue As Variant
+    Dim objExcelWorkbook As Excel.Workbook
+    Dim objSheet As Excel.Worksheet
+    Dim objRange As Excel.Range
+    Dim objFont As Excel.Font ' Add this line for font style
+    Set objWorksheet = ActiveSheet
+    nLastRow = objWorksheet.Range("A" & objWorksheet.Rows.Count).End(xlUp).Row
+    Set objDictionary = CreateObject("Scripting.Dictionary")
+    For nRow = 2 To nLastRow
+        strColumnValue = objWorksheet.Range("A" & nRow).Value
+        If objDictionary.Exists(strColumnValue) = False Then
+            objDictionary.Add strColumnValue, 1
+        End If
+    Next
+    varColumnValues = objDictionary.Keys
+    For i = LBound(varColumnValues) To UBound(varColumnValues)
+        varColumnValue = varColumnValues(i)
+        Set objExcelWorkbook = Excel.Application.Workbooks.Add
+        Set objSheet = objExcelWorkbook.Sheets(1)
+        objSheet.Name = objWorksheet.Name
+        objWorksheet.Rows(1).EntireRow.Copy
+        objSheet.Activate
+        objSheet.Range("A1").Select
+        objSheet.Paste
+        ' Set font style to Cambria
+        Set objFont = objSheet.Range("A1:F1").Font
+        objFont.Name = "Cambria"
+        For nRow = 2 To nLastRow
+            If CStr(objWorksheet.Range("A" & nRow).Value) = CStr(varColumnValue) Then
+                objWorksheet.Rows(nRow).EntireRow.Copy
+                nNextRow = objSheet.Range("A" & objSheet.Rows.Count).End(xlUp).Row + 1
+                objSheet.Range("A" & nNextRow).Select
+                objSheet.Paste
+                objSheet.Columns("A:F").AutoFit
+                Set objRange = objSheet.Range("A" & nNextRow & ":F" & nNextRow)
+                objRange.Borders.LineStyle = xlContinuous ' Add cell borders
+                objRange.Borders.Weight = xlThin ' Specify border thickness
+                ' Set font style to Cambria for the copied row
+                Set objFont = objRange.Font
+                objFont.Name = "Cambria"
+            End If
+        Next
+        objExcelWorkbook.SaveAs varColumnValue & " SHOP USE FEB 2025.xlsx"
+        objExcelWorkbook.Close SaveChanges:=False
+    Next
+End Sub
